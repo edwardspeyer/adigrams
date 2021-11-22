@@ -75,15 +75,15 @@ reg thk dbl
 Box corners can be either square (`+`) or rounded (`*`):
 
 ```
-+---+  +___+  +===+  +===+  *---*
-|reg|  !thk!  HdblH  !lol|  |crv|
-+---+  +___+  +===+  +---+  *---*
++---+  +___+  +===+  +===+  *---*  *===*
+|reg|  !thk!  HdblH  !lol|  |crv|  !lol!
++---+  +___+  +===+  +---+  *---*  *===*
 ```
 
 ```
-┌───┐  ┏━━━┓  ╔═══╗  ?═══╕  ╭───╮
-│reg│  ┃thk┃  ║dbl║  ┃lol│  │crv│
-└───┘  ┗━━━┛  ╚═══╝  ┖───┘  ╰───╯
+┌───┐  ┏━━━┓  ╔═══╗  ?═══╕  ╭───╮  ╭═══╮
+│reg│  ┃thk┃  ║dbl║  ┃lol│  │crv│  ┃lol┃
+└───┘  ┗━━━┛  ╚═══╝  ┖───┘  ╰───╯  ╰═══╯
 ```
 
 Not all combinations of line thickness are available with the standard Unicode
