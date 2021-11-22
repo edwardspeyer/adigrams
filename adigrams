@@ -10,6 +10,15 @@ S = 2
 W = 3
 
 Unicode_Box_Drawing_Characters = '''
+╌    ╍    ╎    ╏
+TODO TODO TODO TODO
+
+┄    ┅    ┆    ┇
+TODO TODO TODO TODO
+
+┈    ┉    ┊    ┋
+TODO TODO TODO TODO
+
 ╴    ╵    ╶    ╷    ╸    ╹    ╺    ╻
 0001 1000 0100 0010 0002 2000 0200 0020
 
@@ -60,16 +69,24 @@ Unicode_Box_Drawing_Characters = '''
 
 ╬
 3333
+
+╭    ╮    ╯    ╰
+TODO TODO TODO TODO
+
+╱    ╲    ╳
+TODO TODO TODO
 '''
 
 
 def build_unicode_lookup_table():
     table = dict()
-    chunks = Unicode_Box_Drawing_Characters.split('\n\n')
+    chunks = Unicode_Box_Drawing_Characters.strip().split('\n\n')
     for chunk in chunks:
         lines = chunk.strip().splitlines()
         glyphs, patterns = map(str.split, lines)
         for glyph, pattern in zip(glyphs, patterns):
+            if pattern == 'TODO':
+                continue
             pattern = tuple(int(w) for w in pattern)
             table[pattern] = glyph
     return table
