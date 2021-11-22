@@ -35,15 +35,15 @@ Lines must occupy two adjacent chars:
 ```
 --- horizontal |
       vertical |
-  - minus
-    pipe |
+    - minus
+      pipe |
 ```
 
 ```
 ─── horizontal │
       vertical │
-  - minus
-    pipe |
+    - minus
+      pipe |
 ```
 
 
