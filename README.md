@@ -52,21 +52,18 @@ Lines must occupy two adjacent chars:
 Different characters produce different line thickness:
 
 ```
-reg thk dbl
---- ___ ===
-
- |   !   H
- |   !   H
-
-```
+dsh reg thk dbl
+;;; --- ___ ===
+ :   |   !   H
+ :   |   !   H
 
 ```
-reg thk dbl
-─── ━━━ ═══
 
- │   ┃   ║
- │   ┃   ║
-
+```
+dsh reg thk dbl
+╌╌╌ ─── ━━━ ═══
+ ╎   │   ┃   ║
+ ╎   │   ┃   ║
 ```
 
 
