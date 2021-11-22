@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+
 CAP = '+'
 ROUND = '*'
 CORNERS = {CAP, ROUND}
@@ -47,9 +49,8 @@ def visit(grid):
             yield (x, y), char
 
 
-def parse(block):
+def convert(block):
     grid = [list(l) for l in block.splitlines()]
-
     bmp = dict()
 
     for p, char in visit(grid):
@@ -85,41 +86,11 @@ def parse(block):
 
     return '\n'.join(''.join(line) for line in grid)
 
+args = sys.argv[1:]
+if args:
+    ios = map(open, args)
+else:
+    ios = [sys.stdin]
 
-
-print(parse('+--+'))
-
-print(parse('+---+\n|   |\n+---+'))
-print(parse('*---*\n|   |\n*---*'))
-
-print(parse('''
-
-    +_________+
-    !         !   for real
-    !  ADI +--+---|------+
-    !      |:)!   |      |
-    +______+__+  GRAMS   |
-           |             |
-           +-- oh yeah --+
-
-'''))
-
-print(parse('''
-
-    +==============+
-    | hi, welcome  |
-    +==============+
-    |+____________+|
-    |!i am a box  !|
-    |!and you know!|
-    |!that's fine !|
-    |+____________+|
-    *--------------*
-
-'''))
-
-print(parse('''
-        H
-       -+=
-        |
-    '''))
+for io in ios:
+    print(convert(io.read()))
