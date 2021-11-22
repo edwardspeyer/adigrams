@@ -1,22 +1,13 @@
 #!/usr/bin/env python3
 
-CORNER = '+'
-
+CAP = '+'
 HORIZONTAL = '-_='
 VERTICAL = '|!H'
 
-LEFT = (-1, 0)
-RIGHT = (1, 0)
-UP = (0, -1)
-DOWN = (0, 1)
-
-WALKS = (
-        (CORNER + HORIZONTAL, LEFT),
-        (CORNER + HORIZONTAL, RIGHT),
-        (CORNER + VERTICAL, UP),
-        (CORNER + VERTICAL, DOWN),
-        )
-
+N = 0
+E = 1
+S = 2
+W = 3
 
 Unicode_Box_Drawing_Characters = '''
 ╴    ╵    ╶    ╷    ╸    ╹    ╺    ╻
@@ -69,73 +60,56 @@ def visit(grid):
             yield (x, y), char
 
 
-def walk(grid, start, direction):
-    h = len(grid)
-    w = max(map(len, grid))
-    x, y = start
-    dx, dy = direction
-    i = 0
-    while x >= 0 and y >= 0 and x < w and y < h:
-        try:
-            p = grid[y][x]
-        except IndexError:
-            p = None
-        yield i, (x, y), p
-        x += dx
-        y += dy
-        i += 1
-
-
-def find_line(grid, start, direction, line_chars):
-    line = []
-    for index, point, char in walk(grid, start, direction):
-        if char in line_chars:
-            weight = line_chars.index(char)
-            line.append((weight, point))
-        if index > 0 and char == '+':
-            break
-    if len(line) > 1:
-        rev = tuple(reversed(line))
-        if direction == RIGHT:
-            return LEFT, rev
-        if direction == DOWN:
-            return UP, rev
-        else:
-            return direction, tuple(line)
-
-
 def parse(block):
     grid = [list(l) for l in block.splitlines()]
-    lines = set()
-    for start, char in visit(grid):
-        if char == '+':
-            for line_chars, direction in WALKS:
-                line = find_line(grid, start, direction, line_chars)
-                if line:
-                    lines.add(line)
 
-    bmp = dict((p, [None, None, None, None]) for p, _ in visit(grid))
-    for direction, line in lines:
-        for weight, point in line:
-            if direction in {UP, DOWN}:
-                bmp[point][0] = bmp[point][2] = weight
-            elif direction in {LEFT, RIGHT}:
-                bmp[point][1] = bmp[point][3] = weight
+    bmp = dict()
 
-    for point, quad in bmp.items():
-        print(point, quad)
+    for p, char in visit(grid):
+        bmp[p] = [0, 0, 0, 0]
+        if char in HORIZONTAL:
+            weight = HORIZONTAL.index(char) + 1
+            bmp[p][E] = bmp[p][W] = weight
+        elif char in VERTICAL:
+            weight = VERTICAL.index(char) + 1
+            bmp[p][N] = bmp[p][S] = weight
+
+    for p, char in visit(grid):
+        if char == CAP:
+            bmp[p] = [0, 0, 0, 0]
+            x, y = p
+            n = (x, y - 1)
+            s = (x, y + 1)
+            e = (x + 1, y)
+            w = (x - 1, y)
+            if n in bmp: bmp[p][N] = bmp[n][S]
+            if s in bmp: bmp[p][S] = bmp[s][N]
+            if e in bmp: bmp[p][E] = bmp[e][W]
+            if w in bmp: bmp[p][W] = bmp[w][E]
+
+    glyphs = build_unicode_lookup_table()
+    for p, quad in bmp.items():
+        if quad == [0, 0, 0, 0]: continue
+        x, y = p
+        glyph = glyphs[tuple(quad)]
+        grid[y][x] = glyph
+
+    return '\n'.join(''.join(line) for line in grid)
 
 
-parse('+--+')
 
-'''
+print(parse('+--+'))
 
-+_________+
-!         !   for real
-!  ADI +--+---+------+
-!      |:)!   +      |
-+______+__+  GRAMS   |
-       |             |
-       +-- oh yeah --+
+print(parse('+---+\n|   |\n+---+'))
 
-'''
+print(parse('''
+
+    +_________+
+    !         !   for real
+    !  ADI +--+---|------+
+    !      |:)!   |      |
+    +______+__+  GRAMS   |
+           |             |
+           +-- oh yeah --+
+
+'''))
