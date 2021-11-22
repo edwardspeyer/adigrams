@@ -30,24 +30,61 @@ $ adigrams < logo
 
 ### Lines
 
-Lines must occupy two adjacent chars
+Lines must occupy two adjacent chars:
 
 ```
---- horizontal line
-
-|   vertical line
-|
-
--   an actual minus
-|   an actual pipe
+--- horizontal |
+      vertical |
+  - minus
+    pipe |
 ```
 
 ```
-─── horizontal line
-
-│   vertical line
-│
-
--   an actual minus
-|   an actual pipe
+─── horizontal │
+      vertical │
+  - minus
+    pipe |
 ```
+
+
+### Line Style
+
+Different characters produce different line thickness:
+
+```
+reg thk dbl
+--- ___ ===
+
+ |   !   H
+ |   !   H
+
+```
+
+```
+reg thk dbl
+─── ━━━ ═══
+
+ │   ┃   ║
+ │   ┃   ║
+
+```
+
+
+### Boxes
+
+Box corners can be either square (`+`) or rounded (`*`):
+
+```
++---+  +___+  +===+  +===+
+|reg|  !thk!  HdblH  !lol|
++---+  +___+  +===+  +---+
+```
+
+```
+┌───┐  ┏━━━┓  ╔═══╗  ?═══╕
+│reg│  ┃thk┃  ║dbl║  ┃lol│
+└───┘  ┗━━━┛  ╚═══╝  ┖───┘
+```
+
+(Note: as in the "lol" box above, not all combinations of line thickness are
+available with the standard Unicode box drawing characters.)
