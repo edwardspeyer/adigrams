@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+import optparse
+import os
 import sys
+
 
 CAP = '+'
 ROUND = '*'
@@ -30,6 +33,7 @@ GLYPHS = '''
 ╰ 4400   ┄ TODO   ┅ TODO   ┆ TODO   ┇ TODO   ┈ TODO   ┉ TODO   ┊ TODO
 ┋ TODO   ╌ TODO   ╍ TODO   ╎ TODO   ╏ TODO   ╱ TODO   ╲ TODO   ╳ TODO
 '''
+
 
 def build_unicode_lookup_table():
     table = dict()
@@ -86,11 +90,40 @@ def convert(block):
 
     return '\n'.join(''.join(line) for line in grid)
 
-args = sys.argv[1:]
-if args:
-    ios = map(open, args)
-else:
-    ios = [sys.stdin]
 
-for io in ios:
-    print(convert(io.read()))
+def test():
+    if not os.path.exists('README.md'):
+        print('cannot find README.md in current directory; skipping tests')
+        return
+    with open('README.md') as f:
+        readme = f.read()
+    _, examples = readme.split('## Examples')
+    paragraphs = examples.strip().split('```')
+    while len(paragraphs) >= 4:
+        _, test_data, _, expected, *paragraphs = paragraphs
+        actual = convert(test_data)
+        if actual.strip() == expected.strip():
+            continue
+        disaster = ''
+        for e, a in zip(expected, actual):
+            if e == a:
+                disaster += e
+            else:
+                disaster += f'\033[032m{e}\033[031m{a}\033[0m'
+        print('FAILED\n', disaster)
+
+
+if __name__ == '__main__':
+    parser = optparse.OptionParser()
+    parser.add_option('--test', action='store_true')
+    options, args = parser.parse_args()
+
+    if options.test:
+        test()
+    else:
+        if args:
+            ios = map(open, args)
+        else:
+            ios = [sys.stdin]
+        for io in ios:
+            print(convert(io.read()))

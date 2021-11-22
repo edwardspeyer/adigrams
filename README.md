@@ -25,3 +25,29 @@ $ adigrams < logo
            │    LYFE  │
            └──────────┘
 ```
+
+## Examples
+
+### Lines
+
+Lines must occupy two adjacent chars
+
+```
+--- horizontal line
+
+|   vertical line
+|
+
+-   an actual minus
+|   an actual pipe
+```
+
+```
+─── horizontal line
+
+│   vertical line
+│
+
+-   an actual minus
+|   an actual pipe
+```
