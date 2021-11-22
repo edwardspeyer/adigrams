@@ -1,25 +1,27 @@
 # adigrams
 
-Draw lines in ascii...
-    
-```
-    +_________+
-    !         !   for real
-    !  ADI +--+---|------+
-    !      |:)!   |      |
-    +______+__+  GRAMS   |
-           |             |
-           +-- oh yeah --+
-```
-
-...and get Unicode box drawing characters:
+Draw boxes in ascii...
 
 ```
-    ┏━━━━━━━━━┓
-    ┃         ┃   for real
-    ┃  ADI ┌──╂───│──────┐
-    ┃      │:)┃   │      │
-    ┗━━━━━━┿━━┛  GRAMS   │
-           │             │
-           └── oh yeah ──┘
+$ cat logo
+  +------------+
+  | ADIGRAMS   |
+  |        +---+------+
+  |        | 4 |      |
+  +--------+---+      |
+           |    LYFE  |
+           +----------+
+```
+
+...and turn them into Unicode:
+
+```
+$ adigrams < logo
+  ┌────────────┐
+  │ ADIGRAMS   │
+  │        ┌───┼──────┐
+  │        │ 4 │      │
+  └────────┼───┘      │
+           │    LYFE  │
+           └──────────┘
 ```
