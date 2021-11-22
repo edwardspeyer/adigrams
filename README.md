@@ -75,16 +75,18 @@ reg thk dbl
 Box corners can be either square (`+`) or rounded (`*`):
 
 ```
-+---+  +___+  +===+  +===+
-|reg|  !thk!  HdblH  !lol|
-+---+  +___+  +===+  +---+
++---+  +___+  +===+  +===+  *---*
+|reg|  !thk!  HdblH  !lol|  |crv|
++---+  +___+  +===+  +---+  *---*
 ```
 
 ```
-┌───┐  ┏━━━┓  ╔═══╗  ?═══╕
-│reg│  ┃thk┃  ║dbl║  ┃lol│
-└───┘  ┗━━━┛  ╚═══╝  ┖───┘
+┌───┐  ┏━━━┓  ╔═══╗  ?═══╕  ╭───╮
+│reg│  ┃thk┃  ║dbl║  ┃lol│  │crv│
+└───┘  ┗━━━┛  ╚═══╝  ┖───┘  ╰───╯
 ```
 
-(Note: as in the "lol" box above, not all combinations of line thickness are
-available with the standard Unicode box drawing characters.)
+Not all combinations of line thickness are available with the standard Unicode
+box drawing characters.
+
+For curved corners, only the regular line thickness is available.
