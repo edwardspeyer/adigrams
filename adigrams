@@ -3,9 +3,10 @@
 CAP = '+'
 ROUND = '*'
 CORNERS = {CAP, ROUND}
+ERR = '?'
 
-HORIZONTAL = '-_='
-VERTICAL = '|!H'
+HORIZONTAL = ('-', '_' ,'=',)
+VERTICAL = ('|', '!', 'H',)
 
 N = 0
 E = 1
@@ -134,7 +135,7 @@ def parse(block):
     for p, quad in bmp.items():
         if quad == [0, 0, 0, 0]: continue
         x, y = p
-        glyph = glyphs[tuple(quad)]
+        glyph = glyphs.get(tuple(quad), ERR)
         grid[y][x] = glyph
 
     return '\n'.join(''.join(line) for line in grid)
@@ -168,6 +169,12 @@ print(parse('''
     |!and you know!|
     |!that's fine !|
     |+____________+|
-    +--------------+
+    *--------------*
 
 '''))
+
+print(parse('''
+        H
+       -+=
+        |
+    '''))
