@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-CAP = '+'
+CAP_SQUARE = '+'
 HORIZONTAL = '-_='
 VERTICAL = '|!H'
 
@@ -39,6 +39,27 @@ Unicode_Box_Drawing_Characters = '''
 
 ╄    ╅    ╆    ╇    ╈    ╉    ╊    ╋
 2211 1122 1221 2212 1222 2122 2221 2222
+
+═    ║
+0303 3030
+
+╔    ╗    ╚    ╝
+0330 0033 3300 3003
+
+╒    ╓    ╕    ╖    ╘    ╙    ╛    ╜
+0310 0130 0013 0031 1300 3100 1003 3001
+
+╠    ╣    ╦    ╩
+3330 3033 0333 3303
+
+╞    ╟    ╡    ╢    ╤    ╥    ╧    ╨
+1310 3130 1013 3031 0313 0131 1303 3101
+
+╪    ╫
+1313 3131
+
+╬
+3333
 '''
 
 
@@ -75,7 +96,7 @@ def parse(block):
             bmp[p][N] = bmp[p][S] = weight
 
     for p, char in visit(grid):
-        if char == CAP:
+        if char == CAP_SQUARE:
             bmp[p] = [0, 0, 0, 0]
             x, y = p
             n = (x, y - 1)
@@ -111,5 +132,19 @@ print(parse('''
     +______+__+  GRAMS   |
            |             |
            +-- oh yeah --+
+
+'''))
+
+print(parse('''
+
+    +==============+
+    | hi, welcome  |
+    +==============+
+    |+____________+|
+    |!i am a box  !|
+    |!and you know!|
+    |!that's fine !|
+    |+____________+|
+    +--------------+
 
 '''))
