@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-CAP_SQUARE = '+'
+CAP = '+'
+ROUND = '*'
+CORNERS = {CAP, ROUND}
+
 HORIZONTAL = '-_='
 VERTICAL = '|!H'
 
@@ -71,7 +74,7 @@ TODO TODO TODO TODO
 3333
 
 ╭    ╮    ╯    ╰
-TODO TODO TODO TODO
+0440 0044 4004 4400
 
 ╱    ╲    ╳
 TODO TODO TODO
@@ -113,7 +116,7 @@ def parse(block):
             bmp[p][N] = bmp[p][S] = weight
 
     for p, char in visit(grid):
-        if char == CAP_SQUARE:
+        if char in CORNERS:
             bmp[p] = [0, 0, 0, 0]
             x, y = p
             n = (x, y - 1)
@@ -124,6 +127,8 @@ def parse(block):
             if s in bmp: bmp[p][S] = bmp[s][N]
             if e in bmp: bmp[p][E] = bmp[e][W]
             if w in bmp: bmp[p][W] = bmp[w][E]
+            if char == ROUND:
+                bmp[p] = list(4 if v else 0 for v in bmp[p])
 
     glyphs = build_unicode_lookup_table()
     for p, quad in bmp.items():
@@ -139,6 +144,7 @@ def parse(block):
 print(parse('+--+'))
 
 print(parse('+---+\n|   |\n+---+'))
+print(parse('*---*\n|   |\n*---*'))
 
 print(parse('''
 
