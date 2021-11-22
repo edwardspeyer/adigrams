@@ -53,6 +53,14 @@ def visit(grid):
             yield (x, y), char
 
 
+def neighbours(p):
+    x, y = p
+    yield (x, y - 1)
+    yield (x, y + 1)
+    yield (x + 1, y)
+    yield (x - 1, y)
+
+
 def convert(block):
     grid = [list(l) for l in block.splitlines()]
     bmp = dict()
@@ -70,16 +78,28 @@ def convert(block):
         if char in CORNERS:
             bmp[p] = [0, 0, 0, 0]
             x, y = p
-            n = (x, y - 1)
-            s = (x, y + 1)
-            e = (x + 1, y)
-            w = (x - 1, y)
+            n, s, e, w = neighbours(p)
             if n in bmp: bmp[p][N] = bmp[n][S]
             if s in bmp: bmp[p][S] = bmp[s][N]
             if e in bmp: bmp[p][E] = bmp[e][W]
             if w in bmp: bmp[p][W] = bmp[w][E]
             if char == ROUND:
                 bmp[p] = list(4 if v else 0 for v in bmp[p])
+
+    # Delete lines that are only 1 grid space long / have no neighbouring bits
+    for p, quad in tuple(bmp.items()):
+        has_neighbour = False
+        x, y = p
+        n, s, e, w = neighbours(p)
+        if quad[N] and n in bmp and bmp[n][S]:
+            continue
+        elif quad[S] and s in bmp and bmp[s][N]:
+            continue
+        elif quad[E] and e in bmp and bmp[e][W]:
+            continue
+        elif quad[W] and w in bmp and bmp[w][E]:
+            continue
+        del bmp[p]
 
     glyphs = build_unicode_lookup_table()
     for p, quad in bmp.items():
