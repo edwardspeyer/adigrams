@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+
+CORNER = '+'
+
+HORIZONTAL = '-_='
+VERTICAL = '|!H'
+
+LEFT = (-1, 0)
+RIGHT = (1, 0)
+UP = (0, -1)
+DOWN = (0, 1)
+
+WALKS = (
+        (CORNER + HORIZONTAL, LEFT),
+        (CORNER + HORIZONTAL, RIGHT),
+        (CORNER + VERTICAL, UP),
+        (CORNER + VERTICAL, DOWN),
+        )
+
+
+Unicode_Box_Drawing_Characters = '''
+╴    ╵    ╶    ╷    ╸    ╹    ╺    ╻
+2574 2575 2576 2577 2578 2579 257A 257B
+0001 1000 0100 0010 0002 2000 0200 0020
+
+─    ━    │    ┃    ╼    ╽    ╾    ╿ 
+2500 2501 2502 2503 257C 257D 257E 257F
+0101 0202 1010 2020 0201 1020 0102 2010
+
+┌    ┍    ┎    ┏    ┐    ┑    ┒    ┓
+250C 250D 250E 250F 2510 2511 2512 2513
+0110 0210 0120 0220 0011 0012 0021 0022
+
+└    ┕    ┖    ┗    ┘    ┙    ┚    ┛   
+2514 2515 2516 2517 2518 2519 251A 251B
+1100 1200 2100 2200 1001 1002 2001 2002
+
+├    ┝    ┞    ┟    ┠    ┡    ┢    ┣    ┤    ┥    ┦    ┧    ┨    ┩    ┪    ┫
+251C 251D 251E 251F 2520 2521 2522 2523 2524 2525 2526 2527 2528 2529 252A 252B
+1110 1210 2110 1120 2120 2210 1220 2220 1011 1021 1012 1021 2021 2012 1022 2022
+
+┬    ┭    ┮    ┯    ┰    ┱    ┲    ┳    ┴    ┵    ┶    ┷    ┸    ┹    ┺    ┻ 
+252C 252D 252E 252F 2530 2531 2532 2533 2534 2535 2536 2537 2538 2539 253A 253B
+0111 0112 0211 0212 0121 0122 0221 0222 1101 1102 1201 1202 2101 2102 2201 2202
+
+┼    ┽    ┾    ┿    ╀    ╁    ╂    ╃    ╄    ╅    ╆    ╇    ╈    ╉    ╊    ╋
+253C 253D 253E 253F 2540 2541 2542 2543 2544 2545 2546 2547 2548 2549 254A 254B
+1111 1112 1211 1212 2111 1121 2121 2112 2211 1122 1221 2212 1222 2122 2221 2222
+'''
+
+
+def build_unicode_lookup_table():
+    table = dict()
+    chunks = Unicode_Box_Drawing_Characters.split('\n\n')
+    for chunk in chunks:
+        glyphs, codes, patterns = chunk.strip().splitlines()
+        tuples = zip(*map(str.split, (glyphs, codes, patterns)))
+        for glyph, code, pattern in tuples:
+            code = int(code, 0x10)
+            assert glyph == chr(code)
+            pattern = tuple(int(w) for w in pattern)
+            table[pattern] = glyph
+    return table
+
+
+def visit(grid):
+    for y, row in enumerate(grid):
+        for x, char in enumerate(row):
+            yield (x, y), char
+
+
+def walk(grid, start, direction):
+    h = len(grid)
+    w = max(map(len, grid))
+    x, y = start
+    dx, dy = direction
+    i = 0
+    while x >= 0 and y >= 0 and x < w and y < h:
+        try:
+            p = grid[y][x]
+        except IndexError:
+            p = None
+        yield i, (x, y), p
+        x += dx
+        y += dy
+        i += 1
+
+
+def find_line(grid, start, direction, line_chars):
+    line = []
+    for index, point, char in walk(grid, start, direction):
+        if char in line_chars:
+            weight = line_chars.index(char)
+            line.append((weight, point))
+        if index > 0 and char == '+':
+            break
+    if len(line) > 1:
+        rev = tuple(reversed(line))
+        if direction == RIGHT:
+            return LEFT, rev
+        if direction == DOWN:
+            return UP, rev
+        else:
+            return direction, tuple(line)
+
+
+def parse(block):
+    grid = [list(l) for l in block.splitlines()]
+    lines = set()
+    for start, char in visit(grid):
+        if char == '+':
+            for line_chars, direction in WALKS:
+                line = find_line(grid, start, direction, line_chars)
+                if line:
+                    lines.add(line)
+
+    bmp = dict((p, [None, None, None, None]) for p, _ in visit(grid))
+    for direction, line in lines:
+        for weight, point in line:
+            if direction in {UP, DOWN}:
+                bmp[point][0] = bmp[point][2] = weight
+            elif direction in {LEFT, RIGHT}:
+                bmp[point][1] = bmp[point][3] = weight
+
+    for point, quad in bmp.items():
+        print(point, quad)
+
+
+parse('+--+')
+
+'''
+
++_________+
+!         !   for real
+!  ADI +--+---+------+
+!      |:)!   +      |
++______+__+  GRAMS   |
+       |             |
+       +-- oh yeah --+
+
+'''
+
+d = build_unicode_lookup_table()
