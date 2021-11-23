@@ -10,12 +10,16 @@ ROUND = '*'
 CORNERS = {CAP, ROUND}
 ERR = '?'
 
-HORIZONTAL = (';', '-', '_' ,'=',)
-VERTICAL = (':', '|', '!', 'H',)
-
 N, E, S, W = 0, 1, 2, 3
 
 WEIGHT_ROUNDED = 5
+
+ASCII = '''
+; 0101   : 1010
+- 0202   | 2020
+_ 0303   ! 3030
+= 0404   H 4040
+'''
 
 GLYPHS = '''
 ╴ 0002   ╸ 0003   ╷ 0020   ┐ 0022   ┑ 0023   ╕ 0024   ╻ 0030   ┒ 0032
@@ -32,21 +36,16 @@ GLYPHS = '''
 ╉ 3233   ┗ 3300   ┺ 3302   ┻ 3303   ┡ 3320   ╄ 3322   ╇ 3323   ┣ 3330
 ╊ 3332   ╋ 3333   ╜ 4002   ╝ 4004   ║ 4040   ╢ 4042   ╣ 4044   ╙ 4200
 ╨ 4202   ╟ 4240   ╫ 4242   ╚ 4400   ╩ 4404   ╠ 4440   ╬ 4444   ╯ 5005
-╰ 5500   ┄ TODO   ┅ TODO   ┆ TODO   ┇ TODO   ┈ TODO   ┉ TODO   ┊ TODO
-┋ TODO   ╌ 0101   ╍ TODO   ╎ 1010   ╏ TODO   ╱ TODO   ╲ TODO   ╳ TODO
+╰ 5500   ┄ 9999   ┅ 9999   ┆ 9999   ┇ 9999   ┈ 9999   ┉ 9999   ┊ 9999
+┋ 9999   ╌ 0101   ╍ 9999   ╎ 1010   ╏ 9999   ╱ 9999   ╲ 9999   ╳ 9999
 '''
 
 
-def build_unicode_lookup_table():
-    table = dict()
-    tokens = GLYPHS.split()
+def scan(table_string):
+    tokens = table_string.split()
     for i in range(0, len(tokens), 2):
         glyph, pattern = tokens[i:i+2]
-        if pattern == 'TODO':
-            continue
-        pattern = tuple(map(int, pattern))
-        table[pattern] = glyph
-    return table
+        yield glyph, tuple(map(int, pattern))
 
 
 def visit(grid):
@@ -67,14 +66,12 @@ def convert(block):
     grid = [list(l) for l in block.splitlines()]
     bmp = dict()
 
+    patterns = dict(scan(ASCII)) | dict(scan(GLYPHS))
+    glyphs = dict((v, k) for k, v in patterns.items())
+
     for p, char in visit(grid):
-        bmp[p] = [0, 0, 0, 0]
-        if char in HORIZONTAL:
-            weight = HORIZONTAL.index(char) + 1
-            bmp[p][E] = bmp[p][W] = weight
-        elif char in VERTICAL:
-            weight = VERTICAL.index(char) + 1
-            bmp[p][N] = bmp[p][S] = weight
+        if char in patterns:
+            bmp[p] = patterns[char]
 
     for p, char in visit(grid):
         if char in CORNERS:
@@ -103,7 +100,6 @@ def convert(block):
             continue
         del bmp[p]
 
-    glyphs = build_unicode_lookup_table()
     for p, quad in bmp.items():
         if quad == [0, 0, 0, 0]: continue
         x, y = p
