@@ -21,12 +21,7 @@ $ adigrams < logo
            └──────────┘
 ```
 
-`adigrams` is a tool to help create text based diagrams.  
-You draw your diagram in ascii and `adigrams` turns it into Unicode.
-`adigrams` shouldn't be part of a compile
-chain – instead you use it to generate
-original files which you keep, as opposed to building diagram files from "source".
-In the same way that `inkscape` helps you create an SVG, `adigrams` helps you create text.
+`adigrams` is a tool to help create text based diagrams. You draw your diagram in ascii and `adigrams` turns it into Unicode.  `adigrams` shouldn't be part of a compile chain – instead you use it to generate original files which you keep, as opposed to building diagram files from "source".  In the same way that `inkscape` helps you create an SVG, `adigrams` helps you create text.
 
 You can use `adigrams` as a text filter in your editor and do conversions while you build
 your diagram.  Here it is in `vim`, using the `[filter]` feature in that editor:
