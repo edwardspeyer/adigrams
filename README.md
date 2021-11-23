@@ -26,6 +26,8 @@ $ adigrams < logo
            └──────────┘
 ```
 
+<img src="demo.svg" />
+
 ## Examples
 
 ### Lines
