@@ -1,6 +1,5 @@
 # adigrams
 
-Draw boxes in ascii...
 
 ```
 $ cat logo
@@ -11,11 +10,7 @@ $ cat logo
   +--------+---+      |
            |    LYFE  |
            +----------+
-```
 
-...and turn them into Unicode:
-
-```
 $ adigrams < logo
   ┌────────────┐
   │ ADIGRAMS   │
@@ -26,10 +21,10 @@ $ adigrams < logo
            └──────────┘
 ```
 
-## Editor Filter
-
-`adigrams` is a tool to help create text based diagrams.  It's not part of a compile
-chain – you use it to generate
+`adigrams` is a tool to help create text based diagrams.  
+You draw your diagram in ascii and `adigrams` turns it into Unicode.
+`adigrams` shouldn't be part of a compile
+chain – instead you use it to generate
 original files which you keep, as opposed to building diagram files from "source".
 In the same way that `inkscape` helps you create an SVG, `adigrams` helps you create text.
 
